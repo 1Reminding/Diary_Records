@@ -4,6 +4,16 @@
 
 Diary Records｜日记唱片 是一个面向手机 AI 体验设计的可运行 AIGC 应用原型。它不只是“帮用户写日记”，而是把照片、陪伴式对话、情绪理解、粒子影像、唱片视觉和私人音乐生成融合在一起，让每一天都成为一张有画面、有情绪、有旋律的日记唱片。
 
+## 作品宣传海报
+
+<p align="center">
+  <img src="./宣传海报/宣传海报1.png" alt="Diary Records 宣传海报 1" width="100%" />
+</p>
+
+<p align="center">
+  <img src="./宣传海报/宣传海报2.png" alt="Diary Records 宣传海报 2" width="100%" />
+</p>
+
 ![Diary Records 宣传海报](./宣传海报/a_polished_app_promo_poster_style_image_dark_mo.png)
 
 ---
