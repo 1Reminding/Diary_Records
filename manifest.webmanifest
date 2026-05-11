@@ -1,0 +1,18 @@
+{
+  "name": "Diary Records",
+  "short_name": "Diary Records",
+  "description": "AI 日记唱片：影像粒子、陪伴式对话、情绪摘要和私人音乐。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050506",
+  "theme_color": "#050506",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
