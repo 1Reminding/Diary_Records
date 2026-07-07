@@ -1,0 +1,31 @@
+.env
+.env.local
+.env.*.local
+
+node_modules/
+dist/
+
+# Local-only mobile/model workspaces
+android/
+.ace-step-docs/
+.agents/
+
+# Local editor/system files
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+
+# Local QA screenshots and duplicate drafts
+qa-*.png
+README0.md
+
+# Local API experiments / private keys
+api_test.py
+vivo_asr.py
+vivo_llm.py
+
+# Oversized original source photos; optimized assets live in assets/
+/cat.jpg
+/水晶.jpg
+/实习.jpg

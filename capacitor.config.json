@@ -1,0 +1,8 @@
+{
+  "appId": "com.diaryrecords.app",
+  "appName": "Diary Records",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

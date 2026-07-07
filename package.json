@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "dev": "node server.cjs",
+    "start": "node server.cjs",
+    "check": "node --check app.js && node --check server.cjs && node --check scripts/prepare-capacitor.cjs",
+    "prepare:apk": "node scripts/prepare-capacitor.cjs",
+    "cap:sync": "npm run prepare:apk && npx cap sync android",
+    "apk:debug": "npm run prepare:apk && npx cap copy android && cd android && gradlew.bat assembleDebug"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.35",
+    "@supabase/supabase-js": "^2.110.0",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/cli": "^6.2.1",
+    "@capacitor/core": "^6.2.1"
+  }
+}

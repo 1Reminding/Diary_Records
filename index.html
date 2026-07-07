@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#050506" />
+    <meta name="description" content="Diary Records - 将日记、AI 伙伴、影像粒子与私人音乐融合的手机 AI 体验原型。" />
+    <link rel="manifest" href="./manifest.webmanifest?v=10" />
+    <link rel="stylesheet" href="./styles.css?v=10" />
+    <title>Diary Records | 日记唱片</title>
+  </head>
+  <body class="intro-active">
+    <section class="intro-screen" id="introScreen" aria-labelledby="introTitle">
+      <canvas id="introCanvas" aria-hidden="true"></canvas>
+      <div class="intro-noise" aria-hidden="true"></div>
+      <div class="intro-content">
+        <div class="intro-mark" aria-hidden="true">
+          <span class="mark-page"></span>
+          <span class="mark-record"></span>
+          <span class="mark-needle"></span>
+        </div>
+        <span class="intro-kicker">DIARY RECORDS</span>
+        <h1 id="introTitle">把今天，压成一张会唱歌的唱片。</h1>
+        <p>一张照片。一段心事。一首只属于这一天的歌。</p>
+        <button class="intro-cta" id="introStartBtn" type="button">
+          <span>进入日记唱片</span>
+          <small>轻触开始</small>
+        </button>
+      </div>
+      <div class="intro-hint" aria-hidden="true">photo · memory · music</div>
+    </section>
+
+    <section class="auth-screen" id="authScreen" aria-labelledby="authTitle">
+      <div class="auth-orb" aria-hidden="true"></div>
+      <div class="auth-card">
+        <div class="auth-copy">
+          <span class="eyebrow">PRIVATE RECORDS</span>
+          <h1 id="authTitle">登录你的日记唱片库。</h1>
+          <p>把照片、对话、歌曲和情绪记录保存到自己的空间。也可以先以游客模式体验，之后再同步到 Supabase。</p>
+        </div>
+        <form class="auth-form" id="authForm">
+          <label>
+            <span>邮箱</span>
+            <input id="authEmail" type="email" name="diary_login_email" autocomplete="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="you@example.com" />
+          </label>
+          <label>
+            <span>密码</span>
+            <input id="authPassword" type="password" name="diary_login_passphrase" autocomplete="new-password" data-lpignore="true" data-form-type="other" placeholder="至少 6 位" />
+          </label>
+          <label>
+            <span>昵称</span>
+            <input id="authName" type="text" name="diary_display_name" autocomplete="off" data-lpignore="true" data-form-type="other" placeholder="展示在唱片库里" />
+          </label>
+          <p class="auth-status" id="authStatus">Supabase 将在本地服务启动时读取 .env 配置。</p>
+          <div class="auth-actions">
+            <button class="primary-btn" id="signInBtn" type="submit">登录</button>
+            <button class="ghost-btn" id="signUpBtn" type="button">注册</button>
+            <button class="ghost-btn subtle" id="guestBtn" type="button">先体验</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <div class="app-shell">
+      <header class="topbar">
+        <button class="brand" data-route="studio" aria-label="Diary Records">
+          <span class="brand-cn">日记唱片</span>
+          <span class="brand-en">DIARY RECORDS</span>
+        </button>
+        <nav class="nav-tabs" aria-label="主导航">
+          <button class="nav-tab is-active" data-route="studio">GARDEN</button>
+          <button class="nav-tab" data-route="memory">MEMORY</button>
+          <button class="nav-tab" data-route="music">MUSIC</button>
+          <button class="nav-tab" data-route="info">INFO</button>
+        </nav>
+        <div class="top-actions">
+          <button class="account-chip" id="profileBtn" type="button" title="个人资料">
+            <span id="accountAvatar">D</span>
+            <strong id="accountName">Guest</strong>
+          </button>
+          <button class="icon-btn" id="settingsBtn" aria-label="AI 设置" title="AI 设置">
+            <span class="icon-sliders"></span>
+          </button>
+          <button class="icon-btn" id="soundBtn" aria-label="声音" title="声音">
+            <span class="icon-sound"></span>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="view view-studio is-visible" data-view="studio">
+          <div class="studio-layout">
+            <aside class="compose-panel" data-panel="compose">
+              <button class="sheet-close" data-close-panel aria-label="Close">×</button>
+              <div class="panel-head">
+                <span class="eyebrow">TODAY CUT</span>
+                <h1>留下一张会唱歌的今天。</h1>
+              </div>
+
+              <label class="upload-drop" for="photoInput">
+                <input id="photoInput" type="file" accept="image/*" />
+                <span class="upload-mark">+</span>
+                <span>放入今天的画面</span>
+              </label>
+
+              <div class="field-grid">
+                <label>
+                  <span>日期</span>
+                  <input id="entryDate" type="date" />
+                </label>
+                <label>
+                  <span>时间段</span>
+                  <input id="entryRange" type="text" placeholder="19:30 / 晚风后" />
+                </label>
+              </div>
+
+              <label class="wide-field">
+                <span>标题</span>
+                <input id="entryTitle" type="text" placeholder="今天的名字" maxlength="32" />
+              </label>
+
+              <label class="wide-field">
+                <span>一句话</span>
+                <textarea id="entrySeed" rows="4" placeholder="写下一个画面、一句话、一点心情"></textarea>
+              </label>
+
+              <div class="mood-row" aria-label="心情选择">
+                <button class="mood-chip is-selected" data-mood="松弛">松弛</button>
+                <button class="mood-chip" data-mood="清醒">清醒</button>
+                <button class="mood-chip" data-mood="心动">心动</button>
+                <button class="mood-chip" data-mood="低电量">低电量</button>
+              </div>
+
+              <div class="action-row">
+                <button class="primary-btn" id="createBtn">留住今天</button>
+                <button class="ghost-btn" id="demoBtn">看看样片</button>
+              </div>
+            </aside>
+
+            <section class="stage">
+              <div class="model-pill">
+                <span class="live-dot"></span>
+                <span id="modelName">今日陪伴</span>
+              </div>
+
+              <div class="visual-frame" id="visualFrame">
+                <canvas id="particleWebglCanvas" class="particle-webgl" aria-hidden="true"></canvas>
+                <canvas id="particleCanvas"></canvas>
+                <div class="memory-groove" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="memory-cover-art" id="memoryCoverArt">
+                  <img id="memoryCoverImage" alt="" />
+                  <div class="cover-caption">
+                    <span>DIARY CUT</span>
+                    <strong id="coverTitle">Untitled day</strong>
+                  </div>
+                </div>
+                <div class="record-view" id="recordView" aria-hidden="true">
+                  <div class="vinyl">
+                    <img id="recordImage" alt="" />
+                    <span class="vinyl-hole"></span>
+                    <span class="vinyl-shine"></span>
+                  </div>
+                </div>
+                <div class="keyword-orbit" id="keywordOrbit"></div>
+                <div class="memory-strips" id="memoryStrips" aria-hidden="true"></div>
+                <div class="scene-quote" id="sceneQuote">
+                  <span class="quote-kicker">DAY SIGNAL</span>
+                  <p>放入一张照片，让今天先在画面里慢慢浮现。</p>
+                  <div class="quote-actions">
+                    <button class="quote-pill" id="sceneWriteBtn" type="button">写下此刻</button>
+                    <button class="quote-pill muted" id="sceneChatBtn" type="button">和它聊聊</button>
+                  </div>
+                </div>
+                <div class="empty-state" id="emptyState">
+                  <span>WAITING</span>
+                  <strong>一张照片，或者一句今天。</strong>
+                </div>
+              </div>
+
+              <div class="stage-controls">
+                <div class="segmented">
+                  <button class="is-active" data-visual="particles">散点</button>
+                  <button data-visual="record">唱片</button>
+                </div>
+                <button class="gesture-chip" id="handTrackBtn" type="button" aria-label="手势">
+                  <span id="gestureState">手势</span>
+                </button>
+                <button class="icon-btn large" id="voiceBtn" aria-label="语音输入" title="语音输入">
+                  <span class="icon-mic"></span>
+                </button>
+                <div class="timer" id="timer">00:00</div>
+              </div>
+              <video id="handTrackerVideo" class="hand-tracker-video" playsinline muted></video>
+            </section>
+
+            <aside class="chat-panel" data-panel="chat">
+              <button class="sheet-close" data-close-panel aria-label="Close">×</button>
+              <div class="panel-head compact">
+                <span class="eyebrow">SOFT LOG</span>
+                <h2>和今天聊一会儿</h2>
+              </div>
+              <div class="chat-log" id="chatLog"></div>
+              <form class="chat-form" id="chatForm">
+                <input id="chatInput" type="text" placeholder="写给今天..." autocomplete="off" />
+                <button class="icon-btn" type="submit" aria-label="发送">
+                  <span class="icon-send"></span>
+                </button>
+              </form>
+              <div class="action-row">
+                <button class="ghost-btn" id="summarizeBtn">整理成卡片</button>
+                <button class="ghost-btn" id="songBtn">压成唱片</button>
+              </div>
+            </aside>
+            <div class="mobile-dock" aria-label="Mobile quick actions">
+              <button class="dock-btn" data-open-panel="compose" type="button">写</button>
+              <button class="dock-btn" id="dockHandBtn" type="button">势</button>
+              <button class="dock-btn primary" id="dockVoiceBtn" type="button">声</button>
+              <button class="dock-btn" data-open-panel="chat" type="button">聊</button>
+            </div>
+            <button class="sheet-backdrop" id="sheetBackdrop" aria-label="Close panel"></button>
+          </div>
+        </section>
+
+        <section class="view view-memory" data-view="memory">
+          <div class="memory-header">
+            <span class="eyebrow">MEMORY STACK</span>
+            <h2>所有日记像唱片一样翻阅。</h2>
+          </div>
+          <div class="memory-carousel" id="memoryCarousel"></div>
+        </section>
+
+        <section class="view view-music" data-view="music">
+          <div class="music-grid">
+            <div class="music-player">
+              <span class="eyebrow">TODAY SINGLE</span>
+              <h2 id="songTitle">还没有压制歌曲</h2>
+              <p id="songLyric">完成一张日记卡片后，AI 会把它变成一首私人短歌。</p>
+              <div class="song-meta" id="songMeta"></div>
+              <div class="song-prompt" id="songPrompt"></div>
+              <div class="turntable">
+                <div class="mini-vinyl" id="miniVinyl"></div>
+                <button class="play-btn" id="playSongBtn" aria-label="播放">
+                  <span class="icon-play"></span>
+                </button>
+              </div>
+              <div class="wave-bars" id="waveBars" aria-hidden="true"></div>
+              <div class="audio-upload-panel">
+                <span class="eyebrow">YOUR SOUND</span>
+                <p id="audioUploadStatus">也可以上传自己的配乐，作为这张日记唱片的声音。</p>
+                <div class="action-row">
+                  <label class="ghost-btn audio-upload-btn" for="musicInput">上传音乐</label>
+                  <input id="musicInput" type="file" accept="audio/*" />
+                  <button class="ghost-btn subtle" id="removeMusicBtn" type="button">移除配乐</button>
+                </div>
+              </div>
+            </div>
+            <div class="export-panel">
+              <span class="eyebrow">SHARE COVER</span>
+              <h2>导出可分享封面</h2>
+              <canvas id="shareCanvas" width="1080" height="1440"></canvas>
+              <div class="action-row">
+                <button class="primary-btn" id="exportBtn">导出图片</button>
+                <button class="ghost-btn" id="copyBtn">复制文案</button>
+                <button class="ghost-btn" id="nativeShareBtn">系统分享</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view view-info" data-view="info">
+          <div class="info-layout">
+            <article class="product-card">
+              <span class="eyebrow">ABOUT</span>
+              <h2>年轻人不是不想记录，是不想再写一份孤单的流水账。</h2>
+              <p>
+                Diary Records 把手机 AI 助手变成一个会看照片、会陪聊、会整理情绪、会生成音乐的私人日记伙伴。它面向移动办公、学习、出行和影像生活，把零散输入压制成可回看、可分享、可播放的情绪唱片。
+              </p>
+              <p>
+                产品的核心价值不是替用户“总结人生”，而是在每天最容易被滑走的缝隙里，接住一个人想表达、想被理解、想把生活分享得更漂亮的需求。
+              </p>
+            </article>
+            <div class="phone-link-card">
+              <span class="eyebrow">PHONE LINK</span>
+              <div class="signal-list" id="signalList"></div>
+              <button class="primary-btn" id="simulateBtn">模拟手机联动</button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <dialog class="modal" id="settingsModal">
+        <form method="dialog" class="settings-card">
+          <div class="panel-head compact">
+            <span class="eyebrow">STUDIO SETTINGS</span>
+            <h2>模型与同步</h2>
+          </div>
+          <label>
+            <span>接口地址</span>
+            <input id="apiBase" type="url" placeholder="http://127.0.0.1:4000/v1" />
+          </label>
+          <label>
+            <span>密钥</span>
+            <input id="apiKey" type="password" placeholder="local-proxy-key" />
+          </label>
+          <label>
+            <span>对话与识图模型</span>
+            <input id="apiModel" type="text" placeholder="gemini-3-flash-preview" />
+          </label>
+          <label>
+            <span>唱片创作模型</span>
+            <input id="musicModel" type="text" placeholder="ace-step-1.5 或 gemini-3.5-flash" />
+          </label>
+          <label>
+            <span>音乐生成服务</span>
+            <input id="musicBaseUrl" type="text" placeholder="/api/ace-step 或 http://127.0.0.1:7860" />
+          </label>
+          <div class="action-row">
+            <button class="primary-btn" id="saveSettingsBtn" value="default">保存</button>
+            <button class="ghost-btn" value="cancel">关闭</button>
+          </div>
+        </form>
+      </dialog>
+
+      <dialog class="memory-modal" id="memoryModal">
+        <div class="memory-detail" id="memoryDetail"></div>
+      </dialog>
+
+      <dialog class="modal profile-modal" id="profileModal">
+        <form method="dialog" class="settings-card profile-card">
+          <div class="panel-head compact">
+            <span class="eyebrow">ACCOUNT</span>
+            <h2>个人唱片库</h2>
+          </div>
+          <div class="profile-summary">
+            <span id="profileAvatar">D</span>
+            <div>
+              <strong id="profileName">Guest</strong>
+              <small id="profileEmail">本地游客模式</small>
+            </div>
+          </div>
+          <div class="profile-stats">
+            <span><strong id="profileEntryCount">0</strong> 张唱片</span>
+            <span><strong id="profileSyncState">Local</strong> 状态</span>
+          </div>
+          <div class="action-row">
+            <button class="primary-btn" id="syncCloudBtn" type="button">同步到 Supabase</button>
+            <button class="ghost-btn" id="logoutBtn" type="button">退出登录</button>
+            <button class="ghost-btn" value="cancel">关闭</button>
+          </div>
+        </form>
+      </dialog>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <script src="./config.js"></script>
+    <script src="./node_modules/@supabase/supabase-js/dist/umd/supabase.js"></script>
+    <script src="./app.js?v=10"></script>
+  </body>
+</html>
